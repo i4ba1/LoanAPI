@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: LoanAPI
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loan
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{correlationId}] %-5level %logger{36} - %msg%n"
+
+loanapi:
+  jwt:
+    # dev-only secret; in production this MUST come from a secret manager / env var, never committed.
+    secret: ${JWT_SECRET:dev-only-secret-key-change-me-please-32bytes-min}
+    expiration-minutes: 60
