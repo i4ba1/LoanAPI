@@ -31,6 +31,7 @@ public class IdempotencyKey {
     @Column(unique = true, nullable = false)
     private String idempotencyKey;
 
+    @Column(columnDefinition = "TEXT")
     private String responseBody;
 
     private Integer statusCode;

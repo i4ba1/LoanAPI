@@ -29,19 +29,15 @@ public class LoanController {
     @PostMapping
     public ResponseEntity<LoanRequestResponseDto> requestLoan(
             @Valid @RequestBody LoanRequestDto request,
-            @RequestHeader(value = "Idempotency-Key", required = true) String idempotencyKey) {
+            @RequestHeader(value = "Idempotency-Key", required = false) String idempotencyKey) {
+        // Supplier is lazy — loanService.requestLoan() is only invoked inside
+        // idempotencyService.execute() AFTER the key uniqueness check passes.
+        Supplier<ResponseEntity<LoanRequestResponseDto>> action = () ->
+                ResponseEntity.status(HttpStatus.CREATED).body(loanService.requestLoan(request));
         if (idempotencyKey == null || idempotencyKey.isBlank()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return action.get();
         }
-
-        if(idempotencyService.execute(idempotencyKey, LoanRequestResponseDto.class, null).getStatusCode()
-                != HttpStatus.OK){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        /*Supplier<ResponseEntity<LoanRequestResponseDto>> action = () ->
-                ResponseEntity.status(HttpStatus.CREATED).body(loanService.requestLoan(request));*/
-        return ResponseEntity.status(HttpStatus.CREATED).body(loanService.requestLoan(request));
+        return idempotencyService.execute(idempotencyKey, LoanRequestResponseDto.class, action);
     }
 
     @PostMapping("/approval")

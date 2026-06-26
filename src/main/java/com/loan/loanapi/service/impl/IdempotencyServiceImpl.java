@@ -35,11 +35,10 @@ public class IdempotencyServiceImpl implements IdempotencyService {
         var existing = idempotencyKeyRepository.findByIdempotencyKey(idempotencyKey);
         if (existing.isPresent()) {
             log.info("Idempotency-Key {} already processed, replaying stored response", idempotencyKey);
-            //return replay(existing.get(), responseType);
-            return ResponseEntity.badRequest().build();
+            return replay(existing.get(), responseType);
         }
 
-        ResponseEntity<T> response = ResponseEntity.ok().build();
+        ResponseEntity<T> response = action.get();
 
         try {
             persist(idempotencyKey, response);

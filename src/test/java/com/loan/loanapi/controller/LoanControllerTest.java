@@ -11,9 +11,8 @@ import com.loan.loanapi.service.IdempotencyService;
 import com.loan.loanapi.service.LoanService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.security.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(LoanController.class)
-@AutoConfigureMockMvc(addFilters = false)
 class LoanControllerTest {
 
     @Autowired
@@ -37,10 +35,10 @@ class LoanControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private LoanService loanService;
 
-    @MockBean
+    @MockitoBean
     private IdempotencyService idempotencyService;
 
     @Test

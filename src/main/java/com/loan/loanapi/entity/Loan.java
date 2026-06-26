@@ -33,7 +33,7 @@ public class Loan {
 
     private Integer vehicleYear;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String policeNumber;
 
     private String machineNumber;
